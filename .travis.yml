@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+- '0.10'
+script: npm run-script deploy
+env:
+ global:
+ - GH_REF: github.com/justgook/font-builder.git
+ - secure: LyRZiJhTh/qHOKqrvseJaVBnJYKNjub1dFABDcL/FKZ6S7kVba/CPuzUy5jElxHYSXBqzh6gAcznnrDUDu/iTgy3DK4xTpRHzb87Ec7I51SprQYDpXCRwx8D88ihZGdrBkId8EFBpPs7L/ZyCwR8hsmFTb51jd465T44O/eqWKw=
