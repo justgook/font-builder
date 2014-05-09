@@ -143,6 +143,10 @@ gulp.task "staticCopy", ->
         console.log "file #{path.dirname}/#{path.basename}#{path.extname} copy to #{BUILD_FOLDER}/#{path.dirname}/#{path.basename}#{path.extname} ..."
       .pipe gulp.dest BUILD_FOLDER
 
+gulp.task "FontAwesome", ->
+  gulp.src "node_modules/font-awesome/fonts/**"
+    .pipe gulp.dest BUILD_FOLDER + "/fonts"
+
 
 stylus = require('stylus')
 
@@ -150,9 +154,10 @@ gulp.task 'stylus', ->
   gulp.src 'app/**/*.styl'
     .pipe do ->
       through2.obj (file, enc, cb)->
-        opts.paths ?= [];
-        opts.filename ?= file.path;
-        opts.paths ?= opts.paths.concat([path.dirname(file.path)]);
+        opts = paths: []
+        opts.filename ?= file.path
+        # opts.paths = opts.paths.concat([path.dirname(file.path)])
+        opts.paths.push ["node_modules/"]...
         try
           css = stylus.render(file.contents.toString('utf8'), opts)
           file.contents = new Buffer css
@@ -186,11 +191,10 @@ gulp.task "watch", ->
   server = livereload()
   gulp.watch("app/**/*.styl", ["stylus"]).on "change", (file)-> server.changed file.path
   gulp.watch("app/**/*.static.jade", ["staticJade"]).on "change", (file)-> server.changed file.path
-
   gulp.watch(["app/**/*.coffee"],["coffeelint"])
   gulp.watch(["app/**/*.jade", "app/**/*.js", "app/**/*.coffee"], ["browserify"]).on "change", (file)-> server.changed file.path
   gulp.watch(["app/assets/**/*"], ["staticCopy"]).on "change", (file)-> server.changed file.path
 
-gulp.task "default", ["coffeelint", "staticCopy", "stylus", "staticJade", 'browserify', "startDevServer", "watch"]
+gulp.task "default", ["coffeelint", "FontAwesome", "staticCopy", "stylus", "staticJade", 'browserify', "startDevServer", "watch"]
 
-gulp.task "build", ["coffeelint", "staticCopy", "stylus", "staticJade", 'browserify']
+gulp.task "build", ["coffeelint", "FontAwesome", "staticCopy", "stylus", "staticJade", 'browserify']

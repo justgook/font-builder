@@ -23,15 +23,19 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "napa"
   },
+
   "napa": {
     "angular": "angular/bower-angular",
     "angular-route": "angular/bower-angular-route",
     "angular-resource": "angular/bower-angular-resource",
     "angular-animate": "angular/bower-angular-animate",
-    "angular-scrollevents": "Madd/angular-scrollevents"
+    "angular-scrollevents": "Madd/angular-scrollevents",
+
+    "font-awesome": "raulghm/Font-Awesome-Stylus"
   },
   "config": {
-    "port": "3333"
+    "port": "3333",
+    "styluspaths": ["da"]
   },
   "devDependencies": {
     "gulp": "^3.6.0",

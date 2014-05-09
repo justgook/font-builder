@@ -92,7 +92,7 @@ fontBuilderApp.config ($routeProvider)->
 fontLoaderService = angular.module 'fontLoaderService', ['ngResource']
 
 fontLoaderService.factory 'Fonts', ($resource)->
-  $resource 'fonts/:fontId.json', {},
+  $resource 'data/:fontId.json', {},
     query:
       method: 'GET',
       params:
