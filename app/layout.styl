@@ -1,0 +1,107 @@
+@require "style/reset"
+@import "style/grid"
+
+// TODO fix me for design
+
+/*
+
+DESIGN!!!
+http://www.yearofmoo.com/2013/01/full-spectrum-testing-with-angularjs-and-karma.html
+http://www.designshock.com/flat-gui/
+
+*/
+
+
+
+label
+  display block
+
+body
+  background: #191919
+  -webkit-font-smoothing: antialiased
+  font-family: Verdana, Helvetica, Arial, sans-serif
+  color: #fff
+  header
+    height: 150px
+    h1
+      text-align center
+      font-size 7em
+[ng-view]
+  section
+    column 6
+    box-sizing: border-box
+.FontList
+  column 3
+  background: #202020
+  border: 4px solid #333
+  border-radius: 1em
+  box-sizing: border-box
+  ul
+    height:500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  ul li.selected
+    background: #ccc;
+
+canvas
+  background-color: #fff
+  background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)
+  background-size: 16px 16px
+  background-position: 0 0, 8px 8px
+
+.FontEditParams
+  column 3
+  box-sizing: border-box
+  fieldset
+    background: rgb(32, 32, 32)
+    border: 4px solid #333
+    border-bottom-left-radius: 1em
+    border-bottom-right-radius: 1em
+    padding-top: 2em
+    box-sizing: border-box
+    margin-bottom: 10px
+
+    legend
+      width: 100%
+      margin: 0
+      padding: 0
+      position:relative
+      // left: -4px
+      padding-top:5px
+      padding-bottom:5px
+      border: inherit
+      text-align:center
+      display:block
+      background: inherit
+
+      border-top-left-radius: 1em
+      border-top-right-radius: 1em
+
+
+.FontEditParams ul.hide
+  background: #f00
+  label
+    display: block
+
+
+[ng-click]
+  cursor:pointer;
+
+
+/* Styles go here */
+
+[ng-show]
+    /*position: relative;*/
+    /*height: 100px;*/
+    -webkit-transition:all linear .3s;
+    transition: all linear .3s;
+    /*top: 0;*/
+    opacity: 1;
+
+
+[ng-show].ng-hide
+  opacity: 0;
+
+
+[ng-show].ng-hide-add, [ng-show].ng-hide-remove
+  display:block !important

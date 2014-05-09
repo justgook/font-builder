@@ -1,0 +1,123 @@
+aside.FontList
+  input(type="text", size="3", readonly, ng-model="workData.fontSize")
+  input(type="range", min="8", max="120", ng-model="workData.fontSize")
+  br
+  input(type="text",ng-model='query')
+  ul(ng-scroll-event="updateOnScrollEvents($event, isEndEvent)")
+    li(
+      ng-repeat="item in fonts | filter:{family: query}",
+      ng-class="{'selected': item == selectedItem}",
+      ng-click="itemSelected(item)") {{item.family}}
+
+
+section
+  div
+    label
+      input(type="checkbox", ng-model="workData.retina")
+      |Retina display
+  canvas(font-painter, ng-model="workData")
+
+aside.FontEditParams
+  fieldset
+    legend(ng-click="toggle.mapping = !toggle.mapping") Mapping Info
+    section(ng-show="toggle.mapping")
+      label Show All bounds
+        input(type="checkbox")
+      label Enable kerning
+        input(type="checkbox")
+      label template
+        select(ng-init="mappingKey='test1';mapping={test1:12,test2:43}", ng-model="mappingKey", ng-selected="MappingResult = mapping[mappingKey]")
+          option(value="1") .fontdef (Ogre3d)
+          option(value="2") .ftn (BMFont Text)
+          option .ftn (BMFont XML)
+          option .txt (BMFont Text)
+          option .lua (LUA)
+          option .ftn (BMFont Binary)
+          option .xml (BMFont XML)
+          option .skf (Sprite Kit)
+          option .skf (Sprite Kit @2x)
+          option .skf (Sprite Kit @2x~iphone)
+          option .skf (Sprite Kit @2x~ipad)
+          option .other
+      textarea(ng-model="MappingResult")
+
+  fieldset
+    legend(ng-click="toggle.tAtlas = !toggle.tAtlas") Texture Atlas
+    section.stuff-to-show(ng-show="toggle.tAtlas")
+      label Auto-size
+        input(type="checkbox", ng-model="workData.autoSize")
+      label Width
+        select(ng-disabled="workData.autoSize", ng-model="workData.canvasWidth"): option(ng-repeat="i in [6,7,8,9,10,11,12,13]") {{ Math.pow(2, i) }}
+      label Height
+        select(ng-disabled="workData.autoSize", ng-model="workData.canvasHeight"): option(ng-repeat="i in [6,7,8,9,10,11,12,13]") {{ Math.pow(2, i) }}
+      label Color
+        input(type="text")
+      label Spacing
+        input(type="text")
+      label Anti-Alias
+        input(type="checkbox")
+
+
+  fieldset
+    legend(ng-click="toggle.GlyphFill = !toggle.GlyphFill") Glyph Fill
+    section.stuff-to-show(ng-show="toggle.GlyphFill")
+      label Fill
+        input(type="checkbox", ng-model="workData.fill")
+      label Color Type
+        select(ng-model="workData.fillType", ng-disabled="!workData.fill")
+          option(value="color") Solid
+          option(value="gradient") Gradient
+          option(value="image") Image (tiles)
+      div(ng-switch="workData.fillType", ng-show="workData.fill")
+        input(ng-switch-when="color", type="color", ng-model="workData.fillColor", color-picker)
+        div(ng-switch-when="gradient") Gradient picker
+        input(ng-switch-when="image", type="file")
+        div.animate-switch(ng-switch-when="settings") Settings Div
+
+  fieldset
+    legend(ng-click="toggle.GlyphStroke = !toggle.GlyphStroke") Glyph Stroke
+    section.stuff-to-show(ng-show="toggle.GlyphStroke")
+      label Stroke
+        input(type="checkbox", ng-model="workData.stroke")
+      label Width
+        input(type="text", ng-model="workData.strokeWidth", ng-disabled="!workData.stroke")
+      label Style
+        select(ng-disabled="!workData.stroke")
+          option Center
+          option Outer
+          option Inner
+      label Color Type
+        select(ng-model="workData.strokeType", ng-disabled="!workData.stroke")
+          option(value="color") Solid
+          option(value="gradient") Gradient
+          option(value="image") Image (tiles)
+      label Color
+      input(type="color", ng-model="workData.strokeColor", color-picker)
+
+  fieldset
+    legend(ng-click="toggle.GlyphShaddow = !toggle.GlyphShaddow") Glyph Shaddow
+    section.stuff-to-show(ng-show="toggle.GlyphShaddow")
+      label Shaddow
+        input(type="checkbox")
+      label Type
+        select
+          option Outer
+          option Inner
+      h5 Lighsource
+      label x
+        input(type="text")
+      label y
+        input(type="text")
+      label Blur radius
+        input(type="text")
+      label Color
+        input(type="text", value="#FFFFFF")
+
+  fieldset
+    legend(ng-click="toggle.IncludedGlyphs = !toggle.IncludedGlyphs") Included Glyphs
+    section(ng-show="toggle.IncludedGlyphs")
+      textarea(ng-model="workData.glyphs")
+      br
+      button ASCI
+      button NEHE
+      button UPDATE

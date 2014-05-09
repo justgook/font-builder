@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "Bitmap font generator",
   "main": "index.js",
-  "scripts": {
-    "deploy":"echo \"Deploy Holder\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/justgook/font-builder.git"
@@ -16,5 +12,46 @@
   "bugs": {
     "url": "https://github.com/justgook/font-builder/issues"
   },
-  "homepage": "https://github.com/justgook/font-builder"
+  "homepage": "https://github.com/justgook/font-builder",
+  "private": true,
+
+
+  "scripts": {
+    "start": "DEBUG=true gulp --require coffee-script/register --gulpfile gulpfile.coffee",
+    "deploy":"DEBUG=false gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "napa"
+  },
+
+  "napa": {
+    "angular": "angular/bower-angular",
+    "angular-route": "angular/bower-angular-route",
+    "angular-resource": "angular/bower-angular-resource",
+    "angular-animate": "angular/bower-angular-animate",
+    "angular-scrollevents": "Madd/angular-scrollevents"
+  },
+  "config": {
+    "port": "3333"
+  },
+  "devDependencies": {
+    "gulp": "^3.6.0",
+    "connect-livereload": "^0.3.2",
+    "through": "^2.3.4",
+    "send": "^0.2.0",
+    "coffee-script": "^1.7.1",
+    "vinyl-source-stream": "^0.1.1",
+    "connect": "^2.14.3",
+    "gulp-concat": "^2.2.0",
+    "gulp-livereload": "^1.2.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-newer": "^0.3.0",
+    "browserify": "^3.38.0",
+    "jade": "^1.3.0",
+    "through2": "^0.4.1",
+    "preprocess": "^2.0.0",
+    "gulp-rename": "^1.2.0",
+    "napa": "^0.4.1",
+    "stylus": "0.43.1",
+    "gulp-coffeelint": "^0.3.2"
+  }
 }

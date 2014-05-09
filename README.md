@@ -1,4 +1,4 @@
-#[Font Builder](http://justgook.github.io/font-builder/) [![Build Status](https://travis-ci.org/justgook/font-builder.svg?branch=develop)](https://travis-ci.org/justgook/font-builder)
+#[Font Builder](http://justgook.github.io/font-builder/) [![Build Status](https://travis-ci.org/justgook/font-builder.svg?branch=develop)](https://travis-ci.org/justgook/font-builder) [![](https://david-dm.org/justgook/font-builder.png)](https://david-dm.org/justgook/font-builder) [![Coverage Status](https://coveralls.io/repos/justgook/font-builder/badge.png)](https://coveralls.io/r/justgook/font-builder)
 
 Font builder is the bitmap font tool. Create beautiful designs using highly configurable effects, definable backgrounds.
 
