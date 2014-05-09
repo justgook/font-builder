@@ -16,13 +16,13 @@
   "private": true,
 
 
+
   "scripts": {
     "start": "DEBUG=true gulp --require coffee-script/register --gulpfile gulpfile.coffee",
     "deploy":"DEBUG=false gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "napa"
   },
-
   "napa": {
     "angular": "angular/bower-angular",
     "angular-route": "angular/bower-angular-route",

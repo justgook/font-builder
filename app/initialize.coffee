@@ -97,8 +97,14 @@ fontLoaderService.factory 'Fonts', ($resource)->
       method: 'GET',
       params:
         fontId: 'fonts'
-      responseType: 'json'
+      # responseType: 'json'
       transformResponse: (data, headersGetter)->
+        try
+          data = JSON.parse data
+        catch e
+          console.log error
+
+
         data.items
       isArray: true
 
