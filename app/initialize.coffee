@@ -49,7 +49,7 @@ fontBuilderApp.factory "Data", ->
   fillType: "color" #fill type
   fillColor: "#ca16Fa"
 
-  stroke: true
+  stroke: false
   strokeType: "color"
   strokeWidth: 3
   strokeColor: "#F00000"
@@ -103,8 +103,6 @@ fontLoaderService.factory 'Fonts', ($resource)->
           data = JSON.parse data
         catch e
           console.log error
-
-
         data.items
       isArray: true
 
@@ -115,9 +113,29 @@ fontBuilderControllers = angular.module 'fontBuilderControllers', []
 # https://egghead.io/lessons/angularjs-sharing-data-between-controllers
 
 
-fontBuilderControllers.controller 'EditView', ($scope, Fonts, Data)->
+JSZip = require "jszip"
+saveAs = require "filesaver.js"
+
+
+fontBuilderControllers.controller 'EditView', ($scope, $document, Fonts, Data)->
   $scope.workData = Data
 
+
+  $scope.saveAs = ->
+    #TODO fix this to something nicer
+    canvas = $document.find("canvas")[0]
+
+    zip = new JSZip()
+    imgData = canvas.toDataURL()
+    console.log imgData
+    # zip.file "Hello.txt", "Hello World\n"
+    # img = zip.folder "images"
+    zip.file "font.png", imgData.replace("data:image/png;base64,",""), {base64: true}
+
+    blob = zip.generate {type:"blob"}
+    saveAs blob, "hello.zip"
+
+    return
   $scope.updateOnScrollEvents = ->
     console.log "add dynamic loading of font for preview"
 
@@ -127,8 +145,6 @@ fontBuilderControllers.controller 'EditView', ($scope, Fonts, Data)->
         families: [item.family]
       active: -> $scope.$apply -> $scope.workData.fontFamily = item.family
     $scope.selectedItem = item
-
-
 
   $scope.fonts = do Fonts.query
   $scope.orderProp = 'family'

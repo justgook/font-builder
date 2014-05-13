@@ -35,8 +35,6 @@ fontPainter.factory "Packer", ->
 
   # GrowingPacker: class GrowingPacker
 
-
-
 fontPainter.directive "fontPainter", (Packer)->
 
   clearCanvas = (ctx)->
@@ -47,13 +45,59 @@ fontPainter.directive "fontPainter", (Packer)->
     #  Restore the transform
     ctx.restore()
 
-  #TODO reduce arguments count
-  drawGlyps = (ctx, blocks, fontFamily = "Sans-serif", fontSize = 10, fillStyle = "blue", strokeStyle = "red", strokeWidth = 0, strokeType = "center")->
+
+  class DrawGlypsFill
+    constructor: (ctx, glyph, options)->
+      options ?= {}
+      glyph ?= {}
+      glyph.glyph ?= "a"
+      glyph.fit ?= {}
+      glyph.fit.x = if glyph.fit.x? then +glyph.fit.x else 0
+      glyph.fit.y = if glyph.fit.y? then +glyph.fit.y else 0
+
+  class DrawGlypsFillSolid extends DrawGlypsFill
+    constructor: (ctx, glyph, options)->
+      super
+      options.color ?= "#000"
+      options.alpha ?= 1
+      do ctx.save
+      ctx.globalAlpha = options.alpha
+      ctx.fillStyle = options.color
+      ctx.fillText glyph.glyph, glyph.fit.x, glyph.fit.y
+      do ctx.restore
+      return
+
+  class DrawGlypsFillGradient extends DrawGlypsFill
+    constructor: (ctx, glyph, options)->
+      super
+  class DrawGlypsFillImage extends DrawGlypsFill
+    constructor: (ctx, glyph, options)->
+      #http://www.w3schools.com/tags/canvas_createpattern.asp
+      "#00FFFF"
+      super
+
+  class DrawGlypsShadow
+    constructor: (ctx, glyph, options)->
+  class DrawGlypsShadowOuter extends DrawGlypsShadow
+    constructor: (ctx, glyph, options)->
+      super
+  class DrawGlypsShadowInner extends DrawGlypsShadow
+    constructor: (ctx, glyph, options)->
+      super
+
+  class DrawGlypsStoke
+    constructor: (ctx, glyph, options)->
+  class DrawGlypsStokeCenter extends DrawGlypsStoke
+    constructor: (ctx, glyph, options)-> super
+  class DrawGlypsStokeOuter extends DrawGlypsStoke
+    constructor: (ctx, glyph, options)-> super
+  class DrawGlypsStokeInner extends DrawGlypsStoke
+    constructor: (ctx, glyph, options)-> super
+
+  drawGlyps = (ctx, blocks, fontFamily = "Sans-serif", fontSize = 10, fill = {enabled: false, fillOptions: null}, stroke = {enabled: true}, strokeStyle = "red", strokeWidth = 0, strokeType = "center")->
     unfit = []
     do ctx.save
-    #TODO add gradients and color from selection
     ctx.font = "#{fontSize}px #{fontFamily}"
-    ctx.fillStyle = fillStyle
     ctx.textBaseline = "top"
 
     if strokeWidth > 0
@@ -70,11 +114,18 @@ fontPainter.directive "fontPainter", (Packer)->
 
     for block in blocks
       if block.fit?
-        ctx.fillText block.glyph, block.fit.x, block.fit.y
-        if strokeWidth > 0
-          ctx.strokeText block.glyph, block.fit.x, block.fit.y
+        if fill.enabled
+          fillClass = switch fill.fillType
+            when "color" then DrawGlypsFillSolid
+            when "gradient" then DrawGlypsFillGradient
+            when "image" then DrawGlypsFillImage
+            else Object
+          new fillClass(ctx, block, fill.fillOptions)
+        if stroke.enabled
+          if strokeWidth > 0
+            ctx.strokeText block.glyph, block.fit.x, block.fit.y
 
-        # ctx.rect block.fit.x, block.fit.y, block.w, block.h
+        ctx.rect block.fit.x, block.fit.y, block.w, block.h
         ctx.stroke()
       else
         unfit.push block.glyph
@@ -112,7 +163,7 @@ fontPainter.directive "fontPainter", (Packer)->
 
 
   _wrapText = (context, text, x, y, maxWidth, lineHeight) ->
-    words = text.split(" ")
+    words = text.split " "
     line = ""
     n = 0
 
@@ -210,17 +261,17 @@ fontPainter.directive "fontPainter", (Packer)->
         else
           canvas.style.width = "#{d.canvasWidth}px"
           canvas.style.height = "#{d.canvasHeight}px"
-
-
+        fillOptions = null
         if d.fill
-          fillStyle = switch d.fillType
-            when "color" then d.fillColor
+          fillOptions = switch d.fillType
+            when "color" then color: d.fillColor
             when "gradient" then "#FFFF00"
             when "image"
               #http://www.w3schools.com/tags/canvas_createpattern.asp
               "#00FFFF"
         else
           fillStyle = "transparent"
+
 
         strokeWidth = 0
         if d.stroke
@@ -241,7 +292,11 @@ fontPainter.directive "fontPainter", (Packer)->
         clearCanvas ctx
 
         #TODO reduce argument count / spit to subFunction or pass as few objects
-        unfited = drawGlyps ctx, blocks, d.fontFamily, d.fontSize, fillStyle, strokeStyle, strokeWidth, d.strokeType
+        unfited = drawGlyps ctx,
+          blocks, d.fontFamily, d.fontSize,
+          {enabled: d.fill, fillType: d.fillType, fillOptions: fillOptions},
+          {enabled: d.stroke}
+          strokeStyle, strokeWidth, d.strokeType
         if unfited.length
           drawUnfited ctx, unfited
 

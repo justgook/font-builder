@@ -1,3 +1,5 @@
+button(ng-click="saveAs()") Save Item
+
 aside.FontList
   input(type="text", size="3", readonly, ng-model="workData.fontSize")
   input(type="range", min="8", max="120", ng-model="workData.fontSize")
@@ -19,7 +21,9 @@ section
 
 aside.FontEditParams
   fieldset
-    legend(ng-click="toggle.mapping = !toggle.mapping") Mapping Info
+    legend(ng-click="toggle.mapping = !toggle.mapping")
+      i.fa.fa-info
+      |  Mapping Info
     section(ng-show="toggle.mapping")
       label Show All bounds
         input(type="checkbox")
@@ -42,7 +46,10 @@ aside.FontEditParams
       textarea(ng-model="MappingResult")
 
   fieldset
-    legend(ng-click="toggle.tAtlas = !toggle.tAtlas") Texture Atlas
+    legend(ng-click="toggle.tAtlas = !toggle.tAtlas")
+      i.fa.fa-arrows-alt
+      |  Texture Atlas
+
     section.stuff-to-show(ng-show="toggle.tAtlas")
       label Auto-size
         input(type="checkbox", ng-model="workData.autoSize")

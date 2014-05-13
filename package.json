@@ -14,28 +14,22 @@
   },
   "homepage": "https://github.com/justgook/font-builder",
   "private": true,
-
-
-
   "scripts": {
     "start": "DEBUG=true gulp --require coffee-script/register --gulpfile gulpfile.coffee",
-    "deploy":"DEBUG=false gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
+    "deploy": "DEBUG=false gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "napa"
   },
-
   "napa": {
     "angular": "angular/bower-angular",
     "angular-route": "angular/bower-angular-route",
     "angular-resource": "angular/bower-angular-resource",
     "angular-animate": "angular/bower-angular-animate",
     "angular-scrollevents": "Madd/angular-scrollevents",
-
     "font-awesome": "raulghm/Font-Awesome-Stylus"
   },
   "config": {
-    "port": "3333",
-    "styluspaths": ["da"]
+    "port": "3333"
   },
   "devDependencies": {
     "gulp": "^3.6.0",
@@ -56,6 +50,8 @@
     "gulp-rename": "^1.2.0",
     "napa": "^0.4.1",
     "stylus": "0.43.1",
-    "gulp-coffeelint": "^0.3.2"
+    "gulp-coffeelint": "^0.3.2",
+    "jszip": "^2.2.2",
+    "filesaver.js": "^2013.1.23"
   }
 }

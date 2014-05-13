@@ -1,6 +1,15 @@
+#font preview
+http://renderhjs.net/shoebox/bitmapFont.htm
+
+http://yostudios.github.io/Spritemapper/
+
+
 #TESTs
+
 http://www.yearofmoo.com/2013/01/full-spectrum-testing-with-angularjs-and-karma.html
+
 http://karma-runner.github.io/0.8/plus/Travis-CI.html
+
 https://github.com/angular/protractor
 
 
