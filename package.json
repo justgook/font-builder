@@ -16,7 +16,7 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=true gulp --require coffee-script/register --gulpfile gulpfile.coffee",
-    "deploy": "DEBUG=false gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
+    "deploy": "gulp build --require coffee-script/register --gulpfile gulpfile.coffee",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "napa"
   },
@@ -51,6 +51,7 @@
     "napa": "^0.4.1",
     "stylus": "0.43.1",
     "gulp-coffeelint": "^0.3.2",
+
     "jszip": "^2.2.2",
     "filesaver.js": "^2013.1.23"
   }

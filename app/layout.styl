@@ -1,26 +1,51 @@
 @require "style/reset"
 @import "style/grid"
+@import "style/animate"
 
 @import "font-awesome/stylus/font-awesome"
 $fa-font-path = "fonts"
 @import "font-awesome/stylus/path"
-// TODO fix me for design
 
 /*
+ANIMATIONS !
+
+https://github.com/h5bp/lazyweb-requests/issues/122
 
 DESIGN!!!
 http://www.yearofmoo.com/2013/01/full-spectrum-testing-with-angularjs-and-karma.html
 http://www.designshock.com/flat-gui/
-
+Color Themes: http://codecanyon.net/item/tabbed-html5-css3-responsive-tabs/full_screen_preview/6609747
 */
 
+
+.gallery
+  li
+    display: inline-block
+    width: 100px
+    width: 100px
+    line-height: 100px
+    border:1px solid #ccc
+    text-align: center
+    margin: 5px
+
+button
+  background: #697784
+  border: none
+  padding:10px 20px
+  box-shadow: -5px 5px #272e34
+  margin: 10px 10px 10px 0
+  position: relative
+  // top: 5px
+  &:active
+    top: 1px
+    box-shadow: -3px 3px #272e34
 
 
 label
   display block
 
 body
-  background: #191919
+  background: #34373c
   -webkit-font-smoothing: antialiased
   font-family: Verdana, Helvetica, Arial, sans-serif
   color: #fff
@@ -30,14 +55,14 @@ body
       text-align center
       font-size 7em
 [ng-view]
-  section
+  >section
     column 6
     box-sizing: border-box
 .FontList
   column 3
-  background: #202020
-  border: 4px solid #333
-  border-radius: 1em
+  background: #49535d
+  border-top: 1px solid #545e68
+  border-bottom: 1px solid #38424c
   box-sizing: border-box
   ul
     height:500px;
@@ -53,32 +78,50 @@ canvas
   background-position: 0 0, 8px 8px
 
 .FontEditParams
+
   column 3
   box-sizing: border-box
+  box-shadow: -5px 5px #272e34
+  ul.tabs
+    box-sizing: border-box
+    height: 36px
+    width:100%
+    display:block
+    display:table
+    border-bottom: 1px solid #39434d
+    li
+      box-sizing: border-box
+      font-size: 1.5em
+      cursor: pointer
+      list-style: none
+      vertical-align: middle
+      text-align: center
+      // position:relative;
+      display: table-cell
+      background: #555f69
+      height: 36px
+      &.active
+        background: #697784
+        border-bottom: 3px solid #e35855
+      // float: left
   fieldset
-    background: rgb(32, 32, 32)
-    border: 4px solid #333
-    border-bottom-left-radius: 1em
-    border-bottom-right-radius: 1em
+    background: #49535d
+    border-bottom: 1px solid #38424c
+
     padding-top: 2em
     box-sizing: border-box
-    margin-bottom: 10px
-
     legend
+      font-size: 1.25em
+      border-top: 1px solid #545e68
       width: 100%
       margin: 0
       padding: 0
+      padding-top: 15px
+      // padding-bottom:5px
       position:relative
-      // left: -4px
-      padding-top:5px
-      padding-bottom:5px
-      border: inherit
       text-align:center
       display:block
       background: inherit
-
-      border-top-left-radius: 1em
-      border-top-right-radius: 1em
 
 
 .FontEditParams ul.hide
@@ -88,23 +131,27 @@ canvas
 
 
 [ng-click]
-  cursor:pointer;
+  cursor: pointer;
 
 
-/* Styles go here */
-
-[ng-show]
-    /*position: relative;*/
-    /*height: 100px;*/
-    -webkit-transition:all linear .3s;
-    transition: all linear .3s;
-    /*top: 0;*/
-    opacity: 1;
 
 
-[ng-show].ng-hide
-  opacity: 0;
+// [ng-show]
+//   animated()
+
+// [ng-show].ng-hide
+//   z-index:10
+//   width:100%
+//   animation-name: bounceOutRight
 
 
-[ng-show].ng-hide-add, [ng-show].ng-hide-remove
-  display:block !important
+
+// [ng-show].ng-hide-remove
+//   column(3)
+//   position:absolute
+//   z-index:2
+
+// [ng-show].ng-hide-add
+//   column(3)
+//   position:absolute
+//   display:block !important

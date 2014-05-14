@@ -47,8 +47,9 @@ fontPainter.directive "fontPainter", (Packer)->
 
 
   class DrawGlypsFill
-    constructor: (ctx, glyph, options)->
+    constructor: (@ctx, @options)->
       options ?= {}
+    draw: (glyph)->
       glyph ?= {}
       glyph.glyph ?= "a"
       glyph.fit ?= {}
@@ -56,51 +57,91 @@ fontPainter.directive "fontPainter", (Packer)->
       glyph.fit.y = if glyph.fit.y? then +glyph.fit.y else 0
 
   class DrawGlypsFillSolid extends DrawGlypsFill
-    constructor: (ctx, glyph, options)->
+    constructor: (@ctx, @options)->
       super
       options.color ?= "#000"
       options.alpha ?= 1
-      do ctx.save
-      ctx.globalAlpha = options.alpha
-      ctx.fillStyle = options.color
-      ctx.fillText glyph.glyph, glyph.fit.x, glyph.fit.y
-      do ctx.restore
       return
 
+    draw: (glyph)->
+      super
+      do @ctx.save
+      @ctx.globalAlpha = @options.alpha
+      @ctx.fillStyle = @options.color
+      @ctx.fillText glyph.glyph, glyph.fit.x, glyph.fit.y
+      do @ctx.restore
+
   class DrawGlypsFillGradient extends DrawGlypsFill
-    constructor: (ctx, glyph, options)->
+    constructor: (@ctx, @options)->
       super
   class DrawGlypsFillImage extends DrawGlypsFill
-    constructor: (ctx, glyph, options)->
+    constructor: (@ctx, @options)->
       #http://www.w3schools.com/tags/canvas_createpattern.asp
       "#00FFFF"
       super
 
-  class DrawGlypsShadow
-    constructor: (ctx, glyph, options)->
-  class DrawGlypsShadowOuter extends DrawGlypsShadow
-    constructor: (ctx, glyph, options)->
-      super
-  class DrawGlypsShadowInner extends DrawGlypsShadow
-    constructor: (ctx, glyph, options)->
-      super
+  class DrawGlypsFillFactory
+    constructor: (ctx, options)->
+      FillClass = switch options.options.type
+        when "color" then DrawGlypsFillSolid
+        when "gradient" then DrawGlypsFillGradient
+        when "image" then DrawGlypsFillImage
+        else throw Error "Unknown fill Type (#{options.options.type})"
+      @fillObj = new FillClass ctx, options.options
+    draw: (block)-> @fillObj.draw block
+
+
 
   class DrawGlypsStoke
-    constructor: (ctx, glyph, options)->
-  class DrawGlypsStokeCenter extends DrawGlypsStoke
-    constructor: (ctx, glyph, options)-> super
-  class DrawGlypsStokeOuter extends DrawGlypsStoke
-    constructor: (ctx, glyph, options)-> super
-  class DrawGlypsStokeInner extends DrawGlypsStoke
-    constructor: (ctx, glyph, options)-> super
+    constructor: (@ctx, @options)->
+      options ?= {}
+    draw: (glyph)->
+      glyph ?= {}
+      glyph.glyph ?= "a"
+      glyph.fit ?= {}
+      glyph.fit.x = if glyph.fit.x? then +glyph.fit.x else 0
+      glyph.fit.y = if glyph.fit.y? then +glyph.fit.y else 0
 
-  drawGlyps = (ctx, blocks, fontFamily = "Sans-serif", fontSize = 10, fill = {enabled: false, fillOptions: null}, stroke = {enabled: true}, strokeStyle = "red", strokeWidth = 0, strokeType = "center")->
+  class DrawGlypsStokeSolid extends DrawGlypsStoke
+    constructor: (@ctx, @options)->
+      super
+      options.color ?= "#000"
+      options.alpha ?= 1
+      options.width ?= 1
+      return
+    draw: (glyph)->
+      super
+      do @ctx.save
+      @ctx.lineWidth = @options.width
+      @ctx.strokeStyle = @options.color
+      @ctx.strokeText glyph.glyph, glyph.fit.x, glyph.fit.y
+      do @ctx.restore
+      return
+
+  class DrawGlypsStokeGradient extends DrawGlypsStoke
+    constructor: (@ctx, @options)-> super
+  class DrawGlypsStokeImage extends DrawGlypsStoke
+    constructor: (@ctx, @options)-> super
+
+  class DrawGlypsStrokeFactory
+    constructor: (ctx, options)->
+      StrokeClass = switch options.options.type
+        when "color" then DrawGlypsStokeSolid
+        when "gradient" then DrawGlypsStokeGradient
+        when "image" then DrawGlypsStokeImage
+        else throw Error "Unknown stroke Type (#{options.options.type})"
+      @strokeObj = new StrokeClass ctx, options.options
+    draw: (block)-> @strokeObj.draw block
+
+
+
+  drawGlyps = (ctx, blocks, fontFamily = "Sans-serif", fontSize = 10, fill = {enabled: false, options: null}, stroke = {enabled: true, options: null})->
     unfit = []
     do ctx.save
     ctx.font = "#{fontSize}px #{fontFamily}"
     ctx.textBaseline = "top"
 
-    if strokeWidth > 0
+    # if strokeWidth > 0
 
       # https://developer.mozilla.org/samples/canvas-tutorial/6_1_canvas_composite.html
 
@@ -109,24 +150,23 @@ fontPainter.directive "fontPainter", (Packer)->
       #ctx.lineJoin="miter"; //Experiment with "bevel" & "round" for the effect you want!
       #ctx.miterLimit=3;
 
-      ctx.lineWidth = strokeWidth
-      ctx.strokeStyle = strokeStyle
+    console.log stroke
+    if fill.enabled then drawGlypsFillFactory = new DrawGlypsFillFactory ctx, fill
+    if stroke.enabled then drawGlypsStrokeFactory = new DrawGlypsStrokeFactory ctx, stroke
 
     for block in blocks
       if block.fit?
-        if fill.enabled
-          fillClass = switch fill.fillType
-            when "color" then DrawGlypsFillSolid
-            when "gradient" then DrawGlypsFillGradient
-            when "image" then DrawGlypsFillImage
-            else Object
-          new fillClass(ctx, block, fill.fillOptions)
-        if stroke.enabled
-          if strokeWidth > 0
-            ctx.strokeText block.glyph, block.fit.x, block.fit.y
+        if fill.enabled then drawGlypsFillFactory.draw block
+        if stroke.enabled then drawGlypsStrokeFactory.draw block
 
+        # if stroke.enabled
+        #   if strokeWidth > 0
+        #     ctx.strokeText block.glyph, block.fit.x, block.fit.y
+
+        # @ifdef DEBUG
         ctx.rect block.fit.x, block.fit.y, block.w, block.h
         ctx.stroke()
+        # @endif
       else
         unfit.push block.glyph
     do ctx.restore
@@ -261,25 +301,23 @@ fontPainter.directive "fontPainter", (Packer)->
         else
           canvas.style.width = "#{d.canvasWidth}px"
           canvas.style.height = "#{d.canvasHeight}px"
+
+
+
         fillOptions = null
         if d.fill
-          fillOptions = switch d.fillType
-            when "color" then color: d.fillColor
-            when "gradient" then "#FFFF00"
-            when "image"
-              #http://www.w3schools.com/tags/canvas_createpattern.asp
-              "#00FFFF"
-        else
-          fillStyle = "transparent"
+          fillOptions =
+            type: d.fillType
+            color: d.fillColor
 
 
-        strokeWidth = 0
+
+        strokeOptions = null
         if d.stroke
-          strokeWidth = d.strokeWidth
-          strokeStyle = switch d.strokeType
-            when "color" then d.strokeColor
-            when "gradient" then "#FFFF00"
-            when "image" then "#00FFFF"
+          strokeOptions =
+            type: d.strokeType
+            width: d.strokeWidth
+            color: d.strokeColor
 
         # calcualte glyphs sizes
         # TODO add sizes of stroke / shadow
@@ -294,9 +332,10 @@ fontPainter.directive "fontPainter", (Packer)->
         #TODO reduce argument count / spit to subFunction or pass as few objects
         unfited = drawGlyps ctx,
           blocks, d.fontFamily, d.fontSize,
-          {enabled: d.fill, fillType: d.fillType, fillOptions: fillOptions},
-          {enabled: d.stroke}
-          strokeStyle, strokeWidth, d.strokeType
+          {enabled: d.fill, options: fillOptions}, #fill
+          {enabled: d.stroke, options: strokeOptions} #stroke
+
+
         if unfited.length
           drawUnfited ctx, unfited
 

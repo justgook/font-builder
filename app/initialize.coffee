@@ -49,10 +49,10 @@ fontBuilderApp.factory "Data", ->
   fillType: "color" #fill type
   fillColor: "#ca16Fa"
 
-  stroke: false
+  stroke: true
   strokeType: "color"
-  strokeWidth: 3
-  strokeColor: "#F00000"
+  strokeWidth: 2
+  strokeColor: "#00f033"
 
   canvasWidth: 512
   canvasHeight: 512
@@ -117,9 +117,9 @@ JSZip = require "jszip"
 saveAs = require "filesaver.js"
 
 
-fontBuilderControllers.controller 'EditView', ($scope, $document, Fonts, Data)->
+fontBuilderControllers.controller 'EditView', ($scope, $location, $document, Fonts, Data)->
   $scope.workData = Data
-
+  console.log $location
 
   $scope.saveAs = ->
     #TODO fix this to something nicer
@@ -132,7 +132,7 @@ fontBuilderControllers.controller 'EditView', ($scope, $document, Fonts, Data)->
     # img = zip.folder "images"
     zip.file "font.png", imgData.replace("data:image/png;base64,",""), {base64: true}
 
-    blob = zip.generate {type:"blob"}
+    blob = zip.generate {type: "blob"}
     saveAs blob, "hello.zip"
 
     return
