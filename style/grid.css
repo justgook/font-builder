@@ -1,0 +1,11 @@
+body {
+  width: 100%;
+}
+body:before,
+body:after {
+  content: "";
+  display: table;
+}
+body:after {
+  clear: both;
+}
